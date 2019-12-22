@@ -6,15 +6,18 @@
 <script src="~/Scripts/Angular/myAngular.js"></script>
 
 <div ng-app="Homeapp">
-    <label>Enter Box Hight/Width</label>
-    <input type="text" ng-model="hw" />
-    <select ng-model="color">
-        <option>red</option>
-        <option>blue</option>
-        <option>yellow</option>
-        <option>green</option>
-    </select>
-    <div style="height:{{hw}}px;width:{{hw}}px;background-color:{{color}};">
-
+    <div ng-controller="MyFirstController">
+        <label>Enter Box Hight/Width</label>
+        <input type="text" ng-model="hw" />
+        <select ng-model="color">
+            <option>red</option>
+            <option>blue</option>
+            <option>yellow</option>
+            <option>green</option>
+        </select>
+        <div style="height:{{hw}}px;width:{{calculateWidth()}}px;background-color:{{color}};"></div>
+        <ol>
+            <li ng-repeat="x in countries">{{x}}</li>
+        </ol>
     </div>
 </div>
