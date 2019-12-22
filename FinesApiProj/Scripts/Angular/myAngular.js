@@ -7,3 +7,7 @@ app.controller("MyFirstController", function ($scope) {
         return width;
     };
 });
+
+app.run(function ($rootScope) {
+    $rootScope.msg = "Hello, I am root Scope, I can be accessed outside controller too";
+});
