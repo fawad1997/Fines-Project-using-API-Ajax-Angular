@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "Student Fines using Ajax";
+}
+<h2>Fine Rules using Ajax</h2>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#studentsModal">
+    Add New Student to List
+</button>
+<hr />
+<!-- Modal -->
+<div class="modal fade" id="studentsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Student Fined</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" onsubmit="return addRule(this)">
+                    <input type="hidden" id="id" />
+                    <div class="form-group">
+                        <label>Student Name</label>
+                        <input id="studentname" name="studentname" type="text" class="form-control" placeholder="Name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Fine Date</label>
+                        <input id="dateoffine" name="dateoffine" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="status" name="status" class="form-control">
+                            <option>Paid</option>
+                            <option>Not Paid</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Rule Voilated</label>
+                        <select class="form-control" name="rule_id" id="rule_id">
+                        </select>
+                    </div>
+                    <button id="saveBtn" class="btn btn-primary" type="submit">Add Student to Fine List</button>
+                    <button style="display:none;" id="updateBtn" class="btn btn-primary" type="button">Update Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Fine Date</th>
+            <th>Status</th>
+            <th>Rule Violated</th>
+            <th>Fine Amount $</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="studentstbody">
+    </tbody>
+</table>
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $(document).ready(function () {
+        getStudents();
+        getRules();
+    })
+    function getRules() {
+        $.ajax({
+            type: "get",
+            url: "/api/FineRules",
+            success: function (result) {
+                $("#rule_id").html("");
+                for (r in result) {
+                    $("#rule_id").append("<option value=" + result[r].Id + ">" + result[r].title + "</option>");
+                }
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    }// get Rules Function Ends
+
+
+    function getStudents() {
+        $.ajax({
+            type: "get",
+            url: "/api/Fines",
+            success: function (result) {
+                $("#studentstbody").html("");
+                for (r in result) {
+                    $("#studentstbody").append("<tr><td>" + result[r].studentname + "</td><td>" + result[r].dateoffine + "</td><td>" + result[r].status + "</td><td>" + result[r].FineRules.title + "</td><td>" + result[r].FineRules.amount + "</td><td><button onClick='editStudentFine(\"" + result[r].Id + "\")' type='button' class='btn btn-info'>Edit</button></td><td><button onClick='deleteStudentFine(\"" + result[r].Id + "\")' type='button' class='btn btn-danger'>Delete</button></td></tr>");
+                }
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    }// get Fined Students Function Ends
+
+    function addRule(form) {
+        $.ajax({
+            type: "post",
+            url: "/api/Fines",
+            data: $(form).serialize(),
+            success: function (result) {
+                getStudents();
+                $("#studentsModal").modal("toggle");
+                $("#studentname").val("");
+                $("#dateoffine").val("");
+                $("#status").val("");
+                $("#rule_id").val("");
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+        return false;
+    }
+
+    function deleteStudentFine(id) {
+        var deleteUrl = "/api/Fines/" + id;
+        var isCOnfirmed = confirm("Are you sure you want to delete this?");
+        if (isCOnfirmed) {
+            $.ajax({
+                type: "delete",
+                url: deleteUrl,
+                success: function (result) {
+                    getStudents();
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            })
+        }
+    }
+
+    function editStudentFine(id) {
+        var editUrl = "/api/Fines/" + id;
+        //Populate Data to Model and then show model on edit button click
+        $.ajax({
+            type: "get",
+            url: editUrl,
+            success: function (result) {
+                $("#saveBtn").hide();
+                $("#updateBtn").show();
+                $("#id").val(result.Id);
+                $("#studentname").val(result.studentname);
+                var dateoffine = new Date();
+                $("#dateoffine").val(dateoffine);
+                $("#status").val(result.status);
+                $("#rule_id").val(result.rule_id);
+                $("#studentsModal").modal("toggle");
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    }
+
+    $("#updateBtn").click(function () {
+        var updateUrl = "/api/Fines/" + $("#id").val();
+        var dataToSend = { Id: $("#id").val(), studentname: $("#studentname").val(), dateoffine: $("#dateoffine").val(), status: $("#status").val(), rule_id: $("#rule_id").val() };
+        $.ajax({
+            type: "put",
+            url: updateUrl,
+            data: dataToSend,
+            success: function (result) {
+                getStudents();
+                $("#studentsModal").modal("toggle");
+                $("#saveBtn").show();
+                $("#updateBtn").hide();
+                $("#studentname").val("");
+                $("#dateoffine").val("");
+                $("#status").val("");
+                $("#rule_id").val("");
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    })
+</script>

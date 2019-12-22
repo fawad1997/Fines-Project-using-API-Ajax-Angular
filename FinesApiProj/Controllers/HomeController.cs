@@ -18,5 +18,9 @@ namespace FinesApiProj.Controllers
         {
             return View();
         }
+        public ActionResult StudentFinesAjax()
+        {
+            return View();
+        }
     }
 }

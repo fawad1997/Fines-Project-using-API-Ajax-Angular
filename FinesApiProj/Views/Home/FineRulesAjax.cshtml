@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "FineRules";
+    ViewBag.Title = "Fine Rules";
 }
 <h2>Fine Rules using Ajax</h2>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rulesModal">
@@ -49,10 +49,10 @@
 @Scripts.Render("~/bundles/jquery")
 <script>
     $(document).ready(function () {
-        getCourses();
+        getRules();
     })
 
-    function getCourses() {
+    function getRules() {
         $.ajax({
             type: "get",
             url: "/api/FineRules",
@@ -66,7 +66,7 @@
                 alert("Error");
             }
         })
-    }// get Courses Function Ends
+    }// get Rules Function Ends
 
     function addRule(form) {
         $.ajax({
@@ -74,7 +74,7 @@
             url: "/api/FineRules",
             data: $(form).serialize(),
             success: function (result) {
-                getCourses();
+                getRules();
                 $("#rulesModal").modal("toggle");
                 $("#title").val("");
                 $("#amount").val("");
@@ -94,7 +94,7 @@
                 type: "delete",
                 url: deleteUrl,
                 success: function (result) {
-                    getCourses();
+                    getRules();
                 },
                 error: function (result) {
                     alert("Error");
@@ -131,7 +131,7 @@
             url: updateUrl,
             data: dataToSend,
             success: function (result) {
-                getCourses();
+                getRules();
                 $("#rulesModal").modal("toggle");
                 $("#saveBtn").show();
                 $("#updateBtn").hide();
