@@ -11,3 +11,14 @@ app.controller("MyFirstController", function ($scope) {
 app.run(function ($rootScope) {
     $rootScope.msg = "Hello, I am root Scope, I can be accessed outside controller too";
 });
+app.directive("myCustomColorList", function () {
+    var content = "<select ng-model='color'>";
+    content += "<option>red</option>";
+    content += "<option>blue</option>";
+    content += "<option>yellow</option>";
+    content += "<option>green</option>";
+    content += "</select>";
+    return {
+        template: content
+    };
+});

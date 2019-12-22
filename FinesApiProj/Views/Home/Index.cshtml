@@ -9,12 +9,7 @@
     <div ng-controller="MyFirstController">
         <label>Enter Box Hight/Width</label>
         <input type="text" ng-model="hw" />
-        <select ng-model="color">
-            <option>red</option>
-            <option>blue</option>
-            <option>yellow</option>
-            <option>green</option>
-        </select>
+        <my-custom-color-list></my-custom-color-list>
         <input type="radio" ng-model="gender" value="Male" />Male
         <input type="radio" ng-model="gender" value="Female" />Female
         <br />
