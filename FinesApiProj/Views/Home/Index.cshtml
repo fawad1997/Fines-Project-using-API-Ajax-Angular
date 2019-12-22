@@ -15,10 +15,18 @@
             <option>yellow</option>
             <option>green</option>
         </select>
+        <input type="radio" ng-model="gender" value="Male" />Male
+        <input type="radio" ng-model="gender" value="Female" />Female
+        <br />
+        Skills:
+        <input type="checkbox" ng-model="php" />Php
+        <input type="checkbox" ng-model="angular" />Angular
         <div style="height:{{hw}}px;width:{{calculateWidth()}}px;background-color:{{color}};"></div>
         <ol>
             <li ng-repeat="x in countries">{{x}}</li>
         </ol>
+        {{"Your gender is "+gender}}
+        {{"Your skills are php->"+php+", angular->"+angular}}
     </div>
     {{msg}}
 </div>
