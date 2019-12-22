@@ -1,5 +1,5 @@
 ﻿@{ ViewBag.Title = "Index"; }
-<h2>Crud Operation using Web API, Ajax, Json and Angular</h2>
+<h2>Angular Js Practice</h2>
 @Scripts.Render("~/bundles/jquery")
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script src="~/Scripts/angular.min.js"></script>
@@ -7,21 +7,24 @@
 
 <div ng-app="Homeapp">
     <div ng-controller="MyFirstController">
-        <label>Enter Box Hight/Width</label>
-        <input type="text" ng-model="hw" />
-        <my-custom-color-list></my-custom-color-list>
-        <input type="radio" ng-model="gender" value="Male" />Male
-        <input type="radio" ng-model="gender" value="Female" />Female
-        <br />
-        Skills:
-        <input type="checkbox" ng-model="php" />Php
-        <input type="checkbox" ng-model="angular" />Angular
-        <div style="height:{{hw}}px;width:{{calculateWidth()}}px;background-color:{{color}};"></div>
-        <ol>
-            <li ng-repeat="x in countries">{{x}}</li>
-        </ol>
-        {{"Your gender is "+gender}}
-        {{"Your skills are php->"+php+", angular->"+angular}}
+        Item Name: <input type="text" ng-model="item" />
+        {{item | uppercase}} <br/>
+        Price: <input type="number" ng-model="price" />
+        {{price | currency:"Rs. "}}<br/>
+        Search Student : <input type="text" ng-model="stdnam"/>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Reg No</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="student in students | orderBy: 'name'| filter: stdnam">
+                    <td>{{student.reg}}</td>
+                    <td>{{student.name}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    {{msg}}
 </div>
