@@ -7,24 +7,9 @@
 
 <div ng-app="Homeapp">
     <div ng-controller="MyFirstController">
-        Item Name: <input type="text" ng-model="item" />
-        {{item | uppercase}} <br/>
-        Price: <input type="number" ng-model="price" />
-        {{price | currency:"Rs. "}}<br/>
-        Search Student : <input type="text" ng-model="stdnam"/>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Reg No</th>
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="student in students | orderBy: 'name'| filter: stdnam">
-                    <td>{{student.reg}}</td>
-                    <td>{{student.name}}</td>
-                </tr>
-            </tbody>
-        </table>
+        {{"Url is "+url}}<br/>
+        {{"Protocol is "+protocol}}<br/>
+        {{"Port is "+port}}<br/>
+        {{"Host is "+host}}<br/>
     </div>
 </div>
