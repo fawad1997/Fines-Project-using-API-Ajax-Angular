@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "FineRules";
+}
+<h2>Fine Rules using Ajax</h2>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rulesModal">
+    Add New Rule
+</button>
+<hr />
+<!-- Modal -->
+<div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Fine Rules</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" onsubmit="return addRule(this)">
+                    <input type="hidden" id="id" />
+                    <div class="form-group">
+                        <label>Rule Name</label>
+                        <input id="title" name="title" type="text" class="form-control" placeholder="Rule Name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Fine Amount $</label>
+                        <input id="amount" name="amount" type="text" class="form-control" placeholder="$" />
+                    </div>
+                    <button id="saveBtn" class="btn btn-primary" type="submit">Add Rule</button>
+                    <button style="display:none;" id="updateBtn" class="btn btn-primary" type="button">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Rule Name</th>
+            <th>Fine Amount $</th>
+        </tr>
+    </thead>
+    <tbody id="rulestbody">
+    </tbody>
+</table>
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $(document).ready(function () {
+        getCourses();
+    })
+
+    function getCourses() {
+        $.ajax({
+            type: "get",
+            url: "/api/FineRules",
+            success: function (result) {
+                $("#rulestbody").html("");
+                for (r in result) {
+                    $("#rulestbody").append("<tr><td>" + result[r].title + "</td><td>" + result[r].amount + "</td><td><button onClick='editRule(\"" + result[r].Id + "\")' type='button' class='btn btn-info'>Edit</button></td><td><button onClick='deleteRule(\"" + result[r].Id + "\")' type='button' class='btn btn-danger'>Delete</button></td></tr>");
+                }
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    }// get Courses Function Ends
+
+    function addRule(form) {
+        $.ajax({
+            type: "post",
+            url: "/api/FineRules",
+            data: $(form).serialize(),
+            success: function (result) {
+                getCourses();
+                $("#rulesModal").modal("toggle");
+                $("#title").val("");
+                $("#amount").val("");
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+        return false;
+    }
+
+    function deleteRule(id) {
+        var deleteUrl = "/api/FineRules/" + id;
+        var isCOnfirmed = confirm("Are you sure you want to delete this?");
+        if (isCOnfirmed) {
+            $.ajax({
+                type: "delete",
+                url: deleteUrl,
+                success: function (result) {
+                    getCourses();
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            })
+        }
+    }
+
+    function editRule(id) {
+        var editUrl = "/api/FineRules/" + id;
+        //Populate Data to Model and then show model on edit button click
+        $.ajax({
+            type: "get",
+            url: editUrl,
+            success: function (result) {
+                $("#saveBtn").hide();
+                $("#updateBtn").show();
+                $("#id").val(result.Id);
+                $("#title").val(result.title);
+                $("#amount").val(result.amount);
+                $("#rulesModal").modal("toggle");
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    }
+
+    $("#updateBtn").click(function () {
+        var updateUrl = "/api/FineRules/" + $("#id").val();
+        var dataToSend = { Id: $("#id").val(), title: $("#title").val(), amount: $("#amount").val() };
+        $.ajax({
+            type: "put",
+            url: updateUrl,
+            data: dataToSend,
+            success: function (result) {
+                getCourses();
+                $("#rulesModal").modal("toggle");
+                $("#saveBtn").show();
+                $("#updateBtn").hide();
+                $("#title").val("");
+                $("#amount").val("");
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        })
+    })
+</script>

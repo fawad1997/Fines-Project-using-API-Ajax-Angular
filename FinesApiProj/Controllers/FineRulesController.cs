@@ -94,7 +94,12 @@ namespace FinesApiProj.Controllers
             {
                 return NotFound();
             }
-
+            List<Fines> fines = db.Fines.Where(y => y.rule_id == id).ToList();
+            foreach(var finestd in fines)
+            {
+                db.Fines.Remove(finestd);
+            }
+            db.SaveChanges();
             db.FineRules.Remove(fineRules);
             db.SaveChanges();
 
