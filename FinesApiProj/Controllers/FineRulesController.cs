@@ -9,14 +9,15 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using FinesApiProj.DAL;
 using FinesApiProj.Models;
 
 namespace FinesApiProj.Controllers
 {
-    [EnableCors("*","*","*")]
+    [EnableCors("*", "*", "*")]
     public class FineRulesController : ApiController
     {
-        private FinesDbEntities db = new FinesDbEntities();
+        private FinesContext db = new FinesContext();
 
         // GET: api/FineRules
         public IQueryable<FineRules> GetFineRules()
@@ -97,7 +98,7 @@ namespace FinesApiProj.Controllers
                 return NotFound();
             }
             List<Fines> fines = db.Fines.Where(y => y.rule_id == id).ToList();
-            foreach(var finestd in fines)
+            foreach (var finestd in fines)
             {
                 db.Fines.Remove(finestd);
             }

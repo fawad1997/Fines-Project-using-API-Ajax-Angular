@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using FinesApiProj.DAL;
 using FinesApiProj.Models;
 
 namespace FinesApiProj.Controllers
@@ -16,7 +17,7 @@ namespace FinesApiProj.Controllers
     [EnableCors("*", "*", "*")]
     public class FinesController : ApiController
     {
-        private FinesDbEntities db = new FinesDbEntities();
+        private FinesContext db = new FinesContext();
 
         // GET: api/Fines
         public IQueryable<Fines> GetFines()
